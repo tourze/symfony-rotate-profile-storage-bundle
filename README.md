@@ -1,1 +1,0 @@
-# symfony-rotate-profile-storage-bundle

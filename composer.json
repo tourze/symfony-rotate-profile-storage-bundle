@@ -1,0 +1,25 @@
+{
+  "name": "tourze/symfony-rotate-profile-storage-bundle",
+  "description": "",
+  "type": "symfony-bundle",
+  "license": "MIT",
+  "require": {
+    "php": "^8.1",
+    "symfony/config": "^6.4",
+    "symfony/dependency-injection": "^6.4",
+    "symfony/http-kernel": "^6.4",
+    "symfony/http-foundation": "^6.4",
+    "symfony/framework-bundle": "^6.4"
+  },
+  "autoload": {
+    "psr-4": {
+      "Tourze\\RotateProfileStorageBundle\\": "src"
+    }
+  },
+  "require-dev": {
+    "phpstan/phpstan": "^2.1"
+  },
+  "scripts": {
+    "phpstan": "phpstan analyse src -l 1"
+  }
+}
