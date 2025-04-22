@@ -4,13 +4,14 @@ namespace Tourze\RotateProfileStorageBundle\Service;
 
 use Symfony\Component\DependencyInjection\Attribute\AsDecorator;
 use Symfony\Component\DependencyInjection\Attribute\AutowireDecorated;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpKernel\Profiler\Profile;
 use Symfony\Component\HttpKernel\Profiler\ProfilerStorageInterface;
 
 /**
  * 原有的Profile不会自动清除旧的历史文件，只能自己做一次了
  */
-#[AsDecorator(decorates: 'profiler.storage')]
+#[AsDecorator(decorates: 'profiler.storage', onInvalid: ContainerInterface::IGNORE_ON_INVALID_REFERENCE)]
 class RotateFileProfilerStorage implements ProfilerStorageInterface
 {
     public function __construct(
