@@ -1,19 +1,19 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Tourze\RotateProfileStorageBundle\Tests;
 
-use PHPUnit\Framework\TestCase;
-use Symfony\Component\HttpKernel\Bundle\Bundle;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
+use Tourze\PHPUnitSymfonyKernelTest\AbstractBundleTestCase;
 use Tourze\RotateProfileStorageBundle\RotateProfileStorageBundle;
 
-class RotateProfileStorageBundleTest extends TestCase
+/**
+ * @internal
+ */
+#[CoversClass(RotateProfileStorageBundle::class)]
+#[RunTestsInSeparateProcesses]
+final class RotateProfileStorageBundleTest extends AbstractBundleTestCase
 {
-    /**
-     * 测试Bundle类是否正确扩展了Symfony的Bundle基类
-     */
-    public function testBundleInheritsBundle(): void
-    {
-        $bundle = new RotateProfileStorageBundle();
-        $this->assertInstanceOf(Bundle::class, $bundle);
-    }
 }

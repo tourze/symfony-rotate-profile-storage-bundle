@@ -12,20 +12,23 @@ use Symfony\Component\HttpKernel\Profiler\ProfilerStorageInterface;
  * 原有的Profile不会自动清除旧的历史文件，只能自己做一次了
  */
 #[AsDecorator(decorates: 'profiler.storage', onInvalid: ContainerInterface::IGNORE_ON_INVALID_REFERENCE)]
-class RotateFileProfilerStorage implements ProfilerStorageInterface
+readonly class RotateFileProfilerStorage implements ProfilerStorageInterface
 {
     public function __construct(
-        #[AutowireDecorated] private readonly ProfilerStorageInterface $inner,
-    )
-    {
+        #[AutowireDecorated] private ProfilerStorageInterface $inner,
+    ) {
     }
 
     public function write(Profile $profile): bool
     {
         $reflection = new \ReflectionClass($this->inner);
+        /** @var string */
         $indexFile = $reflection->getMethod('getIndexFilename')->invoke($this->inner);
 
         $lines = is_file($indexFile) ? file($indexFile) : [];
+        if (false === $lines) {
+            $lines = [];
+        }
 
         // 检查下是否条数超出限制
         if (count($lines) > ($_ENV['ROTATE_PROFILE_STORAGE_KEEP_SIZE'] ?? 1000)) {
@@ -39,9 +42,13 @@ class RotateFileProfilerStorage implements ProfilerStorageInterface
         return $this->inner->write($profile);
     }
 
-    public function find(?string $ip, ?string $url, ?int $limit, ?string $method, ?int $start = null, ?int $end = null): array
+    /**
+     * @return array<int, array{token: string, ip: string, method: string, url: string, time: int, parent: string|null, status_code: string, virtual_type: string}>
+     */
+    public function find(?string $ip, ?string $url, ?int $limit, ?string $method, ?int $start = null, ?int $end = null, ?string $statusCode = null, ?\Closure $filter = null): array
     {
-        return $this->inner->find($ip, $url, $limit, $method, $start, $end);
+        /** @var array<int, array{token: string, ip: string, method: string, url: string, time: int, parent: string|null, status_code: string, virtual_type: string}> */
+        return $this->inner->find($ip, $url, $limit, $method, $start, $end, $statusCode, $filter);
     }
 
     public function read(string $token): ?Profile
